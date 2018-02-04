@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "1-3": "webpack --config ./1-3/webpack.config.js",
-    "chart1-dev": "webpack-dev-server --inline --hot --watch"
+    "chart1-dev": "webpack-dev-server --hot --devtool source-map --config ./1-3/webpack.config.js --content-base ./1-3"
   },
   "author": "",
   "license": "ISC",
