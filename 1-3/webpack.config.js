@@ -1,7 +1,11 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-
+/**
+ * 参考资料
+ * https://segmentfault.com/a/1190000006670084
+ *
+ */
 module.exports = {
     //javascript 执行入口文件
     entry: path.resolve(__dirname, './main.js'),
@@ -10,8 +14,17 @@ module.exports = {
         filename: 'bundle.js',
         //输出到dist目录下
         //path.resolve是将一个字符解析到一个绝对路径中
-        path: path.resolve(__dirname, './dist')
-        //https://segmentfault.com/a/1190000006670084
+        path: path.resolve(__dirname, './dist'),
+        // publicPath: "",
+        //异步插入的标签的crossorigin值，加载此资源的时候会不带上用户的cookies
+        // crossOriginLoading: "",
+        //导出库的名称
+        // library: [],
+        //配置以何种方式导出库
+        // libraryTarget: "",
+        //配置要导出的模块有哪些子模块需要被导出
+        // libraryExport: []
+
     },
     //loader加载时顺序是从右到左的的，且基本都支持使用查询方式添加参数
     module: {
@@ -35,10 +48,38 @@ module.exports = {
             }
         ]
     },
-    // plugins: [
-    //     new ExtractTextPlugin({
-    //         //从.js文件中提取出来的.css文件的名称
-    //         filename: `[name]_[contenthash:8].css`,
-    //     })
-    // ]
+    // resolve: {
+    //     alias: {
+    //         'react$': '/path/to/react.min.js'
+    //     },
+    //     //都会按顺序寻找，先找到那个算那个
+    //     mainFields: ['browser', 'main'],
+    //     extensions: ['.ts', '.js', '.json'],
+    //     //这个路径，可以优化导入
+    //     modules: ['./src/components', 'node_modules'],
+    //     descriptionFiles: ['package.json'],
+    //     //强制要求带扩展名，但是为了避免有些第三方的模块中的问题，需要设置一下第三个的
+    //     enforceExtension: true,
+    //     enforceModuleExtension: false
+    //
+    //
+    // },
+    devServer: {
+        host: 'localhost',
+        port: 8081,
+        // allowedHosts: ['*'],
+        contentBase: path.resolve(__dirname),
+        // hot: true,
+        open: true,
+        inline:true
+        // rewrites: false
+    },
+    devtool: 'source-map',
+    plugins: [
+        new ExtractTextPlugin({
+            //从.js文件中提取出来的.css文件的名称
+            filename: `[name]_[contenthash:8].css`,
+        }),
+        // new webpack.HotModuleReplacementPlugin()
+    ]
 }
