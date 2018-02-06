@@ -1,5 +1,13 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+//热替换模块，线上不能要
+const HotModuleReplacementPlugin = require('webpack/lib/HotModuleReplacementPlugin')
+//优化热替换的打印信息
+const NameModulesPlugin = require('webpack/lib/NamedModulesPlugin')
+//部署环境
+const DefinePlugin = require('webpack/lib/DefinePlugin')
+//压缩js
+const UglifyJSPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 
 /**
  * 参考资料
@@ -69,9 +77,9 @@ module.exports = {
         port: 8081,
         // allowedHosts: ['*'],
         contentBase: path.resolve(__dirname),
-        // hot: true,
+        hot: true,
         open: true,
-        inline:true
+        // inline:false
         // rewrites: false
     },
     devtool: 'source-map',
@@ -80,6 +88,28 @@ module.exports = {
             //从.js文件中提取出来的.css文件的名称
             filename: `[name]_[contenthash:8].css`,
         }),
-        // new webpack.HotModuleReplacementPlugin()
+        // 该插件的作用就是实现模块热替换，实际上当启动时带上 `--hot` 参数，会注入该插件，生成 .hot-update.json 文件。
+        new HotModuleReplacementPlugin(),
+        // 替换模块的名称名称
+        new NameModulesPlugin(),
+        //
+        new DefinePlugin({
+            //定义当前的环境
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new UglifyJSPlugin({
+            compress: {
+                warnings: false,
+                drop_console: true,
+                collapse_vars: true,
+                reduce_vars: true
+            },
+            output: {
+                beautify: false,
+                comments: false
+            }
+        })
     ]
 }
